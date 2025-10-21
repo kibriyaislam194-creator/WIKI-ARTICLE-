@@ -1,0 +1,91 @@
+const searchInput = document.getElementById("searchInput");
+const articleContent = document.getElementById("articleContent");
+const toc = document.getElementById("toc");
+const themeToggle = document.getElementById("themeToggle");
+
+// Dark mode toggle
+themeToggle.addEventListener("click", () => {
+  const body = document.body;
+  body.dataset.theme = body.dataset.theme === "light" ? "dark" : "light";
+});
+
+// Wikipedia search
+searchInput.addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    const query = searchInput.value;
+    fetchArticle(query);
+  }
+});
+
+// Fetch Wikipedia article
+async function fetchArticle(title) {
+  const url = `https://en.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(title)}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Article not found");
+    const html = await res.text();
+    articleContent.innerHTML = html;
+    processArticle();
+  } catch (err) {
+    articleContent.innerHTML = `<p style="color:red;">${err.message}</p>`;
+    toc.innerHTML = "";
+  }
+}
+
+// Process article for TOC, collapsibles, back-to-top buttons
+function processArticle() {
+  generateTOC();
+  addCollapsibles();
+  addBackToTop();
+  highlightSearchTerms(searchInput.value);
+}
+
+// Generate Table of Contents
+function generateTOC() {
+  toc.innerHTML = "";
+  const headers = articleContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
+  headers.forEach(h => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.textContent = h.textContent;
+    a.href = `#${h.id || h.textContent.replace(/\s+/g, "_")}`;
+    h.id = h.id || h.textContent.replace(/\s+/g, "_");
+    li.appendChild(a);
+    toc.appendChild(li);
+  });
+}
+
+// Make sections collapsible
+function addCollapsibles() {
+  const sections = articleContent.querySelectorAll("h2");
+  sections.forEach(sec => {
+    const btn = document.createElement("button");
+    btn.textContent = sec.textContent;
+    btn.className = "collapsible";
+    sec.parentNode.insertBefore(btn, sec);
+    sec.style.display = "none";
+
+    btn.addEventListener("click", () => {
+      sec.style.display = sec.style.display === "none" ? "block" : "none";
+    });
+  });
+}
+
+// Add back-to-top links
+function addBackToTop() {
+  const sections = articleContent.querySelectorAll("h2, h3, h4, h5, h6");
+  sections.forEach(sec => {
+    const topBtn = document.createElement("span");
+    topBtn.className = "back-to-top";
+    topBtn.textContent = "Back to top";
+    topBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+    sec.parentNode.insertBefore(topBtn, sec.nextSibling);
+  });
+}
+
+// Highlight search terms
+function highlightSearchTerms(term) {
+  if (!term) return;
+  const regex = new RegExp(`(${term})`, "gi");
+  articleContent.innerHTML = articleContent.innerHTML.replace(regex, `<mark>$1</mark>`);
+}
