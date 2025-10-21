@@ -1,0 +1,108 @@
+:root {
+  --bg-light: #ffffff;
+  --bg-dark: #181818;
+  --text-light: #000000;
+  --text-dark: #f0f0f0;
+  --accent: #3366cc;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  display: flex;
+}
+
+[data-theme="dark"] {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--accent);
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+header input {
+  padding: 5px 10px;
+  width: 300px;
+}
+
+header button {
+  padding: 5px 10px;
+}
+
+aside {
+  width: 250px;
+  padding: 80px 20px 20px 20px;
+  border-right: 1px solid #ccc;
+  height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+}
+
+main {
+  margin-left: 270px;
+  padding: 100px 20px 20px 20px;
+  max-width: 900px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  scroll-margin-top: 120px;
+}
+
+.infobox {
+  float: right;
+  width: 250px;
+  margin-left: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+[data-theme="dark"] .infobox {
+  background: #2c2c2c;
+}
+
+.collapsible {
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 16px;
+  background: #eee;
+}
+
+[data-theme="dark"] .collapsible {
+  background: #333;
+  color: #f0f0f0;
+}
+
+.collapsible + .content {
+  display: none;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+.reference {
+  font-size: 0.9em;
+}
+
+.back-to-top {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.8em;
+  cursor: pointer;
+  color: var(--accent);
+}
